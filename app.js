@@ -4,9 +4,16 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+const session = require("express-session");
+
 var indexRouter = require('./routes/index');
+var exampleRouter = require('./routes/example');
+
+require("./globals");
 
 var app = express();
+const RedisStore = require("connect-redis")(session);
+
 
 // view engine setup
 
@@ -19,12 +26,28 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// console.log(global.envConfig.redisIp)
+// console.log(global.envConfig.redisPort)
+// console.log(global.envConfig.redisPWD)
+session({
+    name: "spin-vcode",
+    secret: "vcode",
+    resave: true,
+    rolling: true,
+    saveUninitialized: false,
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 2
+    },
+    store: new RedisStore({ client: global.redisClient }),
+  })
+
 
 // 中间件
 app.use(response);
 
 
 app.use('/', indexRouter);
+app.use('/example', exampleRouter);
 
 
 // catch 404 and forward to error handler
@@ -40,7 +63,7 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  console.log(res)
+  // console.log(res)
   res.render('error');
 });
 

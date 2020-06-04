@@ -1,55 +1,51 @@
-var fs = require('fs');
-var path = require('path');
-var randomstring = require("randomstring");
-var utilsArray = require("../utils/array");
-
-var utilsNumber = require("../utils/number");
-const sharp = require('sharp');
 
 var express = require('express');
 var router = express.Router();
 
-/* GET home page. */
-router.get('/vcodes', function(req, res, next) {
-	genRotateImages().then(images=>{
-		res.success(images);
-	}).catch(err=>{
-		res.fail(err)
-	})
+var {genRotateImage} = require("../utils/image");
+
+var Config = require("../config");
+require("../globals");
+
+router.get('/image', function(req, res, next) {
+	let pid =req.query.pid	
+	global.redisClient.hget(pid, "target" ,function(err, target) {
+		if(!err && target){
+	  		res.sendFile(Config.image.distPath+target)
+	  	}else{
+		  	genRotateImage().then(result=>{
+				global.redisClient.hmset(pid,result)
+				global.redisClient.expire(pid, 60)
+				console.log(pid)
+				console.log(result)
+				res.sendFile(Config.image.distPath+result.target)
+			}).catch(err=>{
+				console.log(err)
+				res.fail(err.message)
+			})
+		}
+	});
 });
 
-function genRotateImages(dir){
-    return new Promise((resolve,reject)=>{
-    	const sourcePath = path.join(__dirname, '../public/images/sources/')
-		const distPath = path.join(__dirname, '../public/images/dist/')
-        fs.readdir(sourcePath, function(err, files) {
-        	if(err){
-        		reject(err)
-        	}else{
-        		const txtFiles = files.filter(el => /\.png$/.test(el))
-				sources=utilsArray.randoms(txtFiles,3);
-				let results=[]
-				sources.map(item=>{
-					let rotate=utilsNumber.random(2,178)
-					let target=randomstring.generate()+".png"
-					sharp(sourcePath+item)
-						.rotate(rotate,{background:"#ffffff"})
-					  	.flatten( { background: '#fff' } )
-					   	.resize({ width: 300,height:300 })
-					   	.trim()
-					   	.toFile(distPath+target)
-					results.push({
-						rotate:rotate,
-						target:target
-					})
-				})
-				resolve(results)
-        	}
-		 	
-		})
-    })
-}
+router.post('/validate', function(req, res, next) {
+  let pid = req.body.pid;
+  let rotate = req.body.r;
 
-
+  if(!pid || !rotate){
+  	res.fail("参数错误")
+  }else{
+  	global.redisClient.hget(pid,'rotate', (pidErr, _rotate) =>{
+	  console.log(_rotate)
+	  console.log(rotate)
+	  if(Math.abs(_rotate-rotate)<3){
+	  	res.success({})
+	  }else{
+	  	res.fail("认证失败")
+	  }
+	})
+  	
+  }
+  
+});
 
 module.exports = router;

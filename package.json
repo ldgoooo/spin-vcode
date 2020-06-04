@@ -21,10 +21,14 @@
   },
   "homepage": "https://github.com/ldgoooo/spin-vcode#readme",
   "dependencies": {
+    "base64-img": "^1.0.4",
     "clean-webpack-plugin": "^3.0.0",
+    "connect-redis": "^4.0.4",
     "cookie-parser": "~1.4.4",
+   "core-js": "^2.6.8",
     "debug": "~2.6.9",
     "express": "~4.16.1",
+    "express-session": "^1.17.1",
     "hookrouter": "^1.2.3",
     "html-webpack-plugin": "^4.3.0",
     "http-errors": "~1.6.3",
@@ -37,6 +41,7 @@
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^3.4.1",
+    "redis": "^3.0.2",
     "sharp": "^0.25.3",
     "use-query-params": "^1.1.3",
     "webpack-merge": "^4.2.2"

@@ -1,6 +1,9 @@
 import React from "react";
 import { useEffect, useState, useRef } from 'react';
 import  useQueryString  from '@/utils/use-query';
+import  { genPid }  from '@/libs/string';
+import  Config  from '@/config';
+
 
 // import background from '@/assets/images/1.png';
 import '@/assets/styles/home.less';
@@ -10,12 +13,16 @@ function Home() {
 	const [moveX, setMoveX] = useState(0);
 	const [percentage, setPercentage] = useState(0);
   const [isMouseDown, setIsMouseDown] = useState(false);
+  const [pid, setPid] = useState(genPid());
+  // setGuid(genGuid())
 
-  const [pid, setPid] = useQueryString('pid');
+  const [uid, setUid] = useQueryString('uid');
+
   
-  const imageUrl=`http://localhost:3333/images/dist/${pid}.png`
-	// percentage
-
+      // validateUrl:'/example/validate',
+      // console.log(apihost)
+  let imageUrl=Config.apihost+'/image?pid='+pid
+ 
   	const refButtion = useRef(null);
   	var style_translate = {
    		transform: 'translateX('+moveX+'px)'
@@ -27,11 +34,13 @@ function Home() {
   
 
   	useOnTouchstart(refButtion, (x) => {
+      console.log("useOnTouchstart")
   		setCurrentX(x)
   		setIsMouseDown(true)
   	});
-  	useOnTouchend(refButtion, (x) => {setIsMouseDown(x)});
+  	useOnTouchend(refButtion, (x) => { console.log("useOnTouchend");setIsMouseDown(x)});
   	useOnTouchmove(refButtion, (event) => {
+      console.log("useOnTouchmove");
   		if(isMouseDown) {
   			const maxWidth=refButtion.current.parentNode.offsetWidth-refButtion.current.offsetWidth
   			let clientX=event.clientX
@@ -53,12 +62,12 @@ function Home() {
 		   	<h1>拖动滑块，使图片角度为正</h1>
 		   	<div  className="vcode-spin-img"><img style={style_rotate} src={imageUrl} /></div>
 		   	<div className="vcode-spin-control">
-		   		<div ref={refButtion} className="vcode-spin-button" style={style_translate}>
-		   			<p></p>
-		   		</div>
-		   	</div>
-		</div>
-	);
+  		   		<div ref={refButtion} className="vcode-spin-button" style={style_translate}>
+  		   			<p></p>
+  		   		</div>
+  		   	</div>
+  		</div>
+  	);
 }
 
 
