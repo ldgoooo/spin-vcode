@@ -9,15 +9,11 @@ module.exports = {
       redisPWD: "",
     }
   },
-  users: {
+  actions: {
   	"nys": {
-  		actions:{
-  			"sms":{
-  				url:"",
-  				type:"post",
-  				defaultParams:{}
-  			}
-  		}
+  		url:"http://www.nongyisheng.com/sms/code",
+  		type:"post",
+  		defaultParams:{}
   	}
   },
   image:{
