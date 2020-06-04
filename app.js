@@ -7,7 +7,6 @@ var logger = require('morgan');
 const session = require("express-session");
 
 var indexRouter = require('./routes/index');
-var exampleRouter = require('./routes/example');
 
 require("./globals");
 
@@ -19,6 +18,7 @@ const RedisStore = require("connect-redis")(session);
 
 // 中间件
 const response = require("./middleware/response");
+const cors = require("./middleware/cors");
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -44,10 +44,10 @@ session({
 
 // 中间件
 app.use(response);
+app.use(cors);
 
 
 app.use('/', indexRouter);
-app.use('/example', exampleRouter);
 
 
 // catch 404 and forward to error handler

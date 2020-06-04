@@ -43,6 +43,16 @@ module.exports = {
           'less-loader'
         ]
       },
+      {
+        test: /\.(eot|ttf|svg|woff|woff2)$/,
+        use: {
+          loader: 'file-loader',
+          options: {
+            name: '[name]_[hash].[ext]',
+            outputPath: 'font/'
+          }
+        }
+      }
     ]
   },
   plugins: [

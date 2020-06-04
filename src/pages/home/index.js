@@ -3,10 +3,11 @@ import { useEffect, useState, useRef } from 'react';
 import  useQueryString  from '@/utils/use-query';
 import  { genPid }  from '@/libs/string';
 import  Config  from '@/config';
+import  {validate}  from '@/api';
 
 
 // import background from '@/assets/images/1.png';
-import '@/assets/styles/home.less';
+import '@/app.less';
 function Home() {
 	
 	const [currentX, setCurrentX] = useState(0);
@@ -38,7 +39,15 @@ function Home() {
   		setCurrentX(x)
   		setIsMouseDown(true)
   	});
-  	useOnTouchend(refButtion, (x) => { console.log("useOnTouchend");setIsMouseDown(x)});
+  	useOnTouchend(refButtion, (x) => {
+     console.log("useOnTouchend");
+     setIsMouseDown(x)
+     validate(pid,360*percentage).then(res=>{
+
+     }).catch(err=>{
+       
+     })
+    });
   	useOnTouchmove(refButtion, (event) => {
       console.log("useOnTouchmove");
   		if(isMouseDown) {
