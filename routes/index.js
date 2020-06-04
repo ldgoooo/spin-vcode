@@ -43,7 +43,7 @@ router.post('/validate', function(req, res, next) {
 	  if(Math.abs(parseInt(_rotate)+parseInt(rotate)-360)<6){
 	  	console.log("success")
 	  	console.log(action)
-		request.post({
+		request[action.type]({
 		  headers: {'content-type' : 'application/x-www-form-urlencoded'},
 		  url:     action.url,
 		  body:    params
