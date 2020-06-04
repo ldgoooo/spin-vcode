@@ -17,7 +17,7 @@ function Home() {
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [pid, setPid] = useState(genPid());
   // setGuid(genGuid())
-
+  const [params, setParams] = useQueryString('params');
   const [uid, setUid] = useQueryString('uid');
 
   
@@ -44,7 +44,7 @@ function Home() {
      console.log("useOnTouchend");
      setIsMouseDown(x)
      setTipState(1)
-     validate(pid,360*percentage).then(res=>{
+     validate(uid,pid,360*percentage,params).then(res=>{
        console.log(res)
        if(res.data.code==200){
          setTipState(2)
@@ -54,7 +54,7 @@ function Home() {
            setTipState(0)
            setMoveX(0)
            setPercentage(0)
-         },400)
+         },600)
        }
      }).catch(err=>{
        setTipState(3)
