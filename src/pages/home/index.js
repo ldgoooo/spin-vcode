@@ -13,6 +13,7 @@ function Home() {
 	const [currentX, setCurrentX] = useState(0);
 	const [moveX, setMoveX] = useState(0);
 	const [percentage, setPercentage] = useState(0);
+  const [tipState, setTipState] = useState(0);
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [pid, setPid] = useState(genPid());
   // setGuid(genGuid())
@@ -42,10 +43,21 @@ function Home() {
   	useOnTouchend(refButtion, (x) => {
      console.log("useOnTouchend");
      setIsMouseDown(x)
+     setTipState(1)
      validate(pid,360*percentage).then(res=>{
-
+       console.log(res)
+       if(res.data.code==200){
+         setTipState(2)
+       }else{
+         setTipState(3)
+         setTimeout(()=>{
+           setTipState(0)
+           setMoveX(0)
+           setPercentage(0)
+         },400)
+       }
      }).catch(err=>{
-       
+       setTipState(3)
      })
     });
   	useOnTouchmove(refButtion, (event) => {
@@ -69,7 +81,12 @@ function Home() {
     return ( <div className="vcode-spin">
 	    	<span>身份验证</span>
 		   	<h1>拖动滑块，使图片角度为正</h1>
-		   	<div  className="vcode-spin-img"><img style={style_rotate} src={imageUrl} /></div>
+		   	<div  className="vcode-spin-img">
+           <img style={style_rotate} src={imageUrl} />
+           {tipState==1 ? <i className="vcode-spin-tip vcode-spin-tip-loading  iconfont icon-checkmore"></i> : "" }
+           {tipState==2 ? <i className="vcode-spin-tip vcode-spin-tip-success  iconfont icon-icon-test"></i> : "" }
+           {tipState==3 ? <i className="vcode-spin-tip vcode-spin-tip-fail  iconfont icon-close"></i> : "" }
+         </div>
 		   	<div className="vcode-spin-control">
   		   		<div ref={refButtion} className="vcode-spin-button" style={style_translate}>
   		   			<p></p>
