@@ -13,9 +13,10 @@ module.exports = merge(common, {
   devServer: {
   	publicPath: '/',
   	historyApiFallback: true,
+    disableHostCheck: true,
     contentBase: path.resolve(__dirname, '../dist'),
     open: true,
-    port: 9001,
+    port: 6912,
     compress: true,
     hot: true
   },

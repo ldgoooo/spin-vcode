@@ -5,3 +5,5 @@ yarn.lock
 package-lock.json
 .vscode
 public/images/dist/*
+.sftp-config.js
+dist/*

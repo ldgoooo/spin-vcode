@@ -11,7 +11,7 @@ module.exports = {
   },
   actions: {
   	"nys": {
-  		url:"http://www.nongyisheng.com/sms/code",
+  		url:"http://www.nongyisheng.com/sms/send",
   		type:"post",
   		defaultParams:{}
   	}

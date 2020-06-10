@@ -8,7 +8,7 @@
     "server": "node ./bin/www",
     "dev": "webpack --config ./config/webpack.dev.config.js",
     "build": "webpack --config ./config/webpack.prod.config.js",
-    "start": "webpack-dev-server --inline --config ./config/webpack.dev.config.js"
+    "start": "webpack-dev-server --inline --host 0.0.0.0 --config ./config/webpack.dev.config.js"
   },
   "repository": {
     "type": "git",
@@ -28,6 +28,7 @@
     "cookie-parser": "~1.4.4",
     "core-js": "^2.6.8",
     "debug": "~2.6.9",
+    "dsbridge": "^3.1.4",
     "express": "~4.16.1",
     "express-session": "^1.17.1",
     "hookrouter": "^1.2.3",
@@ -36,6 +37,7 @@
     "morgan": "~1.9.1",
     "pug": "2.0.0-beta11",
     "qs": "^6.9.4",
+    "query-parse": "^2.0.0",
     "query-string": "^6.12.1",
     "randomstring": "^1.1.5",
     "react": "^16.13.1",
@@ -58,6 +60,7 @@
     "less-loader": "^6.1.0",
     "mini-css-extract-plugin": "^0.9.0",
     "style-loader": "^1.2.1",
+    "terser-webpack-plugin": "^3.0.3",
     "uglifyjs-webpack-plugin": "^2.2.0",
     "url-loader": "^4.1.0",
     "webpack": "^4.43.0",

@@ -4,25 +4,25 @@ import  useQueryString  from '@/utils/use-query';
 import  { genPid }  from '@/libs/string';
 import  Config  from '@/config';
 import  {validate}  from '@/api';
+var dsBridge=require("dsbridge")
 
-
-// import background from '@/assets/images/1.png';
 import '@/app.less';
 function Home() {
 	
 	const [currentX, setCurrentX] = useState(0);
+  const [eventX, setEventX] = useState(0);
 	const [moveX, setMoveX] = useState(0);
+
+  const [maxWidth, setMaxWidth] = useState(0);
+
 	const [percentage, setPercentage] = useState(0);
+  
   const [tipState, setTipState] = useState(0);
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [pid, setPid] = useState(genPid());
-  // setGuid(genGuid())
+  
   const [params, setParams] = useQueryString('params');
   const [uid, setUid] = useQueryString('uid');
-
-  
-      // validateUrl:'/example/validate',
-      // console.log(apihost)
   let imageUrl=Config.apihost+'/image?pid='+pid
  
   	const refButtion = useRef(null);
@@ -33,26 +33,41 @@ function Home() {
    		transform : 'rotate(' + 360 * percentage + 'deg)'
   	};
 
-  
-
   	useOnTouchstart(refButtion, (x) => {
-      console.log("useOnTouchstart")
+      const maxWidth=refButtion.current.parentNode.offsetWidth-refButtion.current.offsetWidth
+      setMaxWidth(maxWidth)
   		setCurrentX(x)
   		setIsMouseDown(true)
   	});
+    useOnTouchmove(refButtion, (event) => {    
+        let clientX=event.clientX
+        setEventX(clientX)      
+    });
+    useEffect(()=>{
+      if(isMouseDown){
+        let _x=eventX-currentX
+        _x=_x>0?_x:0
+        _x=_x>maxWidth?maxWidth:_x
+        setMoveX(_x)
+        setPercentage(parseFloat(moveX/300).toFixed(2))
+      }
+    },[isMouseDown,eventX])
+
   	useOnTouchend(refButtion, (x) => {
-     console.log("useOnTouchend");
      setIsMouseDown(x)
      setTipState(1)
      validate(uid,pid,360*percentage,params).then(res=>{
-       console.log(res)
-       if(res.data.code==200){
+       if(res.code==200){
          setTipState(2)
+         dsBridge.call("spinVcodeValidate",res.data, function (v) {
+            // alert(v);
+         })
        }else{
          setTipState(3)
          setTimeout(()=>{
            setTipState(0)
            setMoveX(0)
+           setPid(genPid())
            setPercentage(0)
          },600)
        }
@@ -60,24 +75,8 @@ function Home() {
        setTipState(3)
      })
     });
-  	useOnTouchmove(refButtion, (event) => {
-      console.log("useOnTouchmove");
-  		if(isMouseDown) {
-  			const maxWidth=refButtion.current.parentNode.offsetWidth-refButtion.current.offsetWidth
-  			let clientX=event.clientX
-  			console.log(event)
-  			let _x=clientX-currentX
-  			_x=_x>0?_x:0
-  			_x=_x>maxWidth?maxWidth:_x
-  			// debugger
-  			setMoveX(_x)
-  			console.log(moveX)
-  			setPercentage(parseFloat(moveX/300).toFixed(2))
-  		}
-  	});
-    // lI7akKu7Rwb28wdW3dJ7LnBNIwG7LG5G
-
-
+  	
+  
     return ( <div className="vcode-spin">
 	    	<span>身份验证</span>
 		   	<h1>拖动滑块，使图片角度为正</h1>
@@ -112,7 +111,7 @@ function useOnTouchstart(ref, handler) {
         element.removeEventListener('touchstart', listener);
       };
     },
-    [ref, handler]
+    []
   );
 }
 
@@ -131,7 +130,7 @@ function useOnTouchmove(ref, handler) {
         element.removeEventListener('touchmove', listener);
       };
     },
-    [ref, handler]
+    []
   );
 }
 
@@ -139,12 +138,9 @@ function useOnTouchend(ref, handler) {
   useEffect(
     () => {
       const listener = event => {
-      	console.log("useOnTouchend-listener")
         handler(false);
       };
-
       const element=ref.current
-      console.log("useOnTouchend")
       element.addEventListener('touchend', listener);
       element.addEventListener('mouseup', listener);
       element.addEventListener('touchcancel', listener);

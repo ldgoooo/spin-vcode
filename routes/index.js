@@ -40,7 +40,7 @@ router.post('/validate', function(req, res, next) {
   	global.redisClient.hget(pid,'rotate', (pidErr, _rotate) =>{
 	  console.log(_rotate)
 	  console.log(rotate)
-	  if(Math.abs(parseInt(_rotate)+parseInt(rotate)-360)<6){
+	  if(Math.abs(parseInt(_rotate)+parseInt(rotate)-360)<10){
 	  	console.log("success")
 	  	console.log(action)
 		request[action.type]({
@@ -48,9 +48,12 @@ router.post('/validate', function(req, res, next) {
 		  url:     action.url,
 		  body:    params
 		}, function(error, response, body){
-		  console.log(body);
+			// res.success(body)
+		  	console.log(body)
+		  	console.log({"errNo":0})
+		  	res.success(body)
 		});
-		res.success({})
+		
 	  }else{
 	  	res.fail("认证失败")
 	  }

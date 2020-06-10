@@ -5,10 +5,11 @@ module.exports = async (req, res, next) => {
     res.header(
       "Access-Control-Allow-Origin",
       req.headers.origin || "http://localhost:9001"
+      // req.headers.origin || "http://39.105.31.67:6914"
     );
   }
 
-  res.header("Access-Control-Allow-Methods", "GET,POST,PUT,POST");
+  res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
   res.header("Access-Control-Allow-Headers", "x-requested-with,content-type");
   res.header("Access-Control-Allow-Credentials", true);
   if (req.method === "OPTIONS") {

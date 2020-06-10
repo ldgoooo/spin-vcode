@@ -17,7 +17,7 @@ function genRotateImage(){
                 console.log(err)
                 reject(err)
             }else{
-                console.log(files)
+                // console.log(files)
                 const txtFiles = files.filter(el => /\.png$/.test(el))
                 
                 // console.log(txtFiles)
