@@ -1,5 +1,5 @@
 # 旋转图片验证
-![截图](https://samesex.oss-cn-shenzhen.aliyuncs.com/spin-vcode.png?x-oss-process=image/resize,w_300)
+![截图](https://samesex.oss-cn-shenzhen.aliyuncs.com/spin-vcode.png?x-oss-process=image/resize,w_350)
 ### 安装依赖
 * yarn install
 ### 启动express , 需要先启动redis redis-server
